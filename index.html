@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CleverTap Integration</title>
+
+  <!-- CleverTap Web SDK Setup -->
+  <script type="text/javascript">
+    var clevertap = {
+      event: [],
+      profile: [],
+      account: [],
+      onUserLogin: [],
+      notifications: [],
+      privacy: [],
+      spa: true
+    };
+
+    clevertap.account.push({ "id": "TEST-5R6-WK5-567Z" }, "eu1");
+    clevertap.privacy.push({ optOut: false });
+    clevertap.privacy.push({ useIP: false });
+
+    (function () {
+      var wzrk = document.createElement('script');
+      wzrk.type = 'text/javascript';
+      wzrk.async = true;
+      wzrk.src = ('https:' === document.location.protocol ?
+        'https://d2r1yp2w7bby2u.cloudfront.net' :
+        'http://static.clevertap.com') + '/js/clevertap.min.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(wzrk, s);
+    })();
+  </script>
+</head>
+
+<body>
+  <h1>Welcome to My CleverTap Demo Page</h1>
+
+  <!-- Dynamic User Input Form -->
+  <h2>Login</h2>
+  <form id="userForm">
+    <label>Name: <input type="text" id="name" required></label><br><br>
+    <label>Email: <input type="email" id="email" required></label><br><br>
+    <label>Phone: <input type="tel" id="phone" placeholder="+14155551234"></label><br><br>
+    <button type="submit">Login User</button>
+  </form>
+
+  <br>
+  <button onclick="trackEvent()">Track Product View</button>
+  <button onclick="askNotificationPermission()">Enable Web Push</button>
+
+  <script>
+    // Dynamic user login based on form input
+    document.getElementById("userForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+
+      clevertap.onUserLogin.push({
+        "Site": {
+          "Name": name,
+          "Identity": email,
+          "Email": email,
+          "Phone": phone,
+          "MSG-email": true,
+          "MSG-push": true,
+          "MSG-sms": true
+        }
+      });
+
+      alert("User logged in with entered details.");
+    });
+
+    // Track a custom event
+    function trackEvent() {
+      clevertap.event.push("Product Viewed", {
+        "Product name": "Casio Chronograph Watch",
+        "Category": "Mens Accessories",
+        "Price": 59.99,
+        "Date": new Date()
+      });
+      alert("Product Viewed event sent.");
+    }
+
+    // Ask permission for Web Push Notifications
+    function askNotificationPermission() {
+      clevertap.notifications.push({
+        "titleText": "Would you like to receive Push Notifications?",
+        "bodyText": "We promise to only send you relevant content.",
+        "okButtonText": "Yes, Notify Me!",
+        "rejectButtonText": "No, Thanks",
+        "okButtonColor": "#F28046",
+        "askAgainTimeInSeconds": 5,
+        "serviceWorkerPath": "clevertap_sw.js",
+        "vapidKey": "BJcoSjUjy2rPmAEdXcV0CJ52qTt_S_yTXBPHPB5x1uUfCTb5BL6YNejfPAq_av9vcw9Ga16itpYY48vFylwtZdA"
+      });
+    }
+  </script>
+</body>
+</html>
