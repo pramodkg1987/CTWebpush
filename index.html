@@ -86,6 +86,7 @@
 
     // Ask permission for Web Push Notifications
     function askNotificationPermission() {
+       alert("askNotificationPermission function triggered");
       clevertap.notifications.push({
         "titleText": "Would you like to receive Push Notifications?",
         "bodyText": "We promise to only send you relevant content.",
@@ -100,4 +101,5 @@
   </script>
 </body>
 </html>
+
 
